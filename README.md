@@ -1,11 +1,7 @@
 # case-study-back
 ### Backend application for case study Laravel
----
 
-#### PHP 7.1
-#### Laravel 5.5
-#### GuzzleHttp
-
+#### PHP 7.1 / Laravel 5.5 / GuzzleHttp
 
 If composer and Laravel are installed, it takes few command to create project.
 
@@ -14,13 +10,18 @@ If composer and Laravel are installed, it takes few command to create project.
 Require guzzle to project 
 
 `composer require guzzlehttp/guzzle`
+
 `composer global require laravel/installer`
 
-to create new job 
 
-php artisan make:command FetchRates
+### Cron
 
-implemented handle method to fetch data
+We need to create new command 
+
+`php artisan make:command FetchRates`
+
+And implement handle method in `/app/Console/Commands/FetchRates.php` to fetch data and store it.
+
 ```php
     $client = new Client();
     $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key={key}');
@@ -28,30 +29,30 @@ implemented handle method to fetch data
     Cache::store('file')->put('rates', $responseJson, 10);
 ```
 
-added it to kernel 
+Than add it to `/app/Console/Kernel.php` and set it to run every minute
 
-set it to run every minute
+```php
+    $schedule->command('inspire')->everyMinute();
+```
 
-and execute 
+And run it 
 
-php artisan DeleteInActiveUsers:deleteusers
-
-
-
-API Route
+`php artisan fetch:rates`
 
 
 
-Route::get('/convert', function (Request $request) {
-    Cache::store('file')->put('rates', $response, 10);
-    $value = Cache::store('file')->get('rates');
-    if($value) {
-        return dd($value)
+
+### API Route
+
+Single responce for `/routes/api.php` request, first it checks cache and if empty fetches new data 
+
+```php
+    $responseJson = Cache::store('file')->get('rates');
+    if(!$responseJson) {
+        $client = new Client();
+        $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key={key}');
+        $responseJson = $requestFrom->getBody()->getContents();
     }
-    $client = new Client();
-    $request = $client->get('example.com');
-    $response = $request->getBody()->getContents();
-    return dd($response);
-});
-
+    return response($responseJson, 200)->header('Content-Type', 'application/json');
+```
 
