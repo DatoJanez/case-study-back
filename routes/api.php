@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/convert', function (Request $request) {
-    $responseJson = Cache::store('file')->get('rates');
+    $responseJson = Cache::store('file')->get('rates'); 
     if(!$responseJson) {
         $client = new Client();
         $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key=8d981abfaca9f2e4162521b9ecf540db');
