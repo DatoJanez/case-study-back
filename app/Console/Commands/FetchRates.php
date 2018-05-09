@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-
+use GuzzleHttp\Client;
 
 class FetchRates extends Command
 {
@@ -39,6 +39,13 @@ class FetchRates extends Command
      */
     public function handle()
     {
-        $this->info('asdasd');
+        $client = new Client();
+        $request = $client->get('example.com');
+        $response = $request->getBody()->getContents();
+        Cache::store('file')->put('rates', $response, 10);
+        // $value = Cache::store('file')->get('rates');
+        // return dd($value);
+
+        // $this->info('asdasd');
     }   
 }

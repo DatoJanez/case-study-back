@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +19,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/convert', function (Request $request) {
+    Cache::store('file')->put('rates', $response, 10);
+    $value = Cache::store('file')->get('rates');
+    if($value) {
+        return dd($value)
+    }
     $client = new Client();
     $request = $client->get('example.com');
     $response = $request->getBody()->getContents();
-    Cache::store('file')->put('rates', $response, 10);
-    $value = Cache::store('file')->get('rates');
-    return dd($value);
+    return dd($response);
 });
