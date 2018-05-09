@@ -1,29 +1,32 @@
 # case-study-back
-Backend application for case study Laravel
+### Backend application for case study Laravel
+---
 
-PHP 7.1
-Laravel 5.6
-GuzzleHttp
+#### PHP 7.1
+#### Laravel 5.5
+#### GuzzleHttp
 
 
-If composer and Laravel are installed it takes single command to create project  
+If composer and Laravel are installed, it takes few command to create project.
 
-composer create-project --prefer-dist laravel/laravel .
+`composer create-project --prefer-dist laravel/laravel`
 
-add guzzle to project 
+Require guzzle to project 
 
-composer require guzzlehttp/guzzle
+`composer require guzzlehttp/guzzle`
+`composer global require laravel/installer`
 
 to create new job 
 
 php artisan make:command FetchRates
 
 implemented handle method to fetch data
-
-$client = new Client();
-$request = $client->get('example.com');
-$response = $request->getBody()->getContents();
-Cache::store('file')->put('rates', $response, 10);
+```php
+    $client = new Client();
+    $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key={key}');
+    $responseJson = $requestFrom->getBody()->getContents();
+    Cache::store('file')->put('rates', $responseJson, 10);
+```
 
 added it to kernel 
 
