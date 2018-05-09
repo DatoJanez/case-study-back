@@ -34,18 +34,14 @@ class FetchRates extends Command
 
     /**
      * Execute the console command.
-     *
+     * Fetches data from API and stores it into cache
      * @return mixed
      */
     public function handle()
     {
         $client = new Client();
-        $request = $client->get('example.com');
-        $response = $request->getBody()->getContents();
-        Cache::store('file')->put('rates', $response, 10);
-        // $value = Cache::store('file')->get('rates');
-        // return dd($value);
-
-        // $this->info('asdasd');
+        $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key=8d981abfaca9f2e4162521b9ecf540db');
+        $responseJson = $requestFrom->getBody()->getContents();
+        Cache::store('file')->put('rates', $responseJson, 10);
     }   
 }

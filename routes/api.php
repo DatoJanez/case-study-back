@@ -20,12 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/convert', function (Request $request) {
-    $value = Cache::store('file')->get('rates');
-    if($value) {
-        return dd($value);
+    $responseJson = Cache::store('file')->get('rates');
+    if(!$responseJson) {
+        $client = new Client();
+        $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key=8d981abfaca9f2e4162521b9ecf540db');
+        $responseJson = $requestFrom->getBody()->getContents();
     }
-    $client = new Client();
-    $requestFrom = $client->request('GET', 'http://example.com');
-    $response = $requestFrom->getBody()->getContents();
-    return dd($response);
+    
+    return response($responseJson, 200)->header('Content-Type', 'application/json');
 });
