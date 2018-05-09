@@ -34,7 +34,7 @@ class FetchRates extends Command
 
     /**
      * Execute the console command.
-     * Fetches data from API and stores it into cache 
+     * Fetches data from API and stores it into cache
      * @return mixed
      */
     public function handle()

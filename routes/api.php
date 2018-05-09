@@ -26,6 +26,6 @@ Route::get('/convert', function (Request $request) {
         $requestFrom = $client->request('GET', 'http://data.fixer.io/api/latest?access_key=8d981abfaca9f2e4162521b9ecf540db');
         $responseJson = $requestFrom->getBody()->getContents();
     }
-    
+     
     return response($responseJson, 200)->header('Content-Type', 'application/json');
 });
