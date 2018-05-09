@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Client;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,7 +25,7 @@ Route::get('/convert', function (Request $request) {
         return dd($value);
     }
     $client = new Client();
-    $request = $client->get('example.com');
-    $response = $request->getBody()->getContents();
+    $requestFrom = $client->request('GET', 'http://example.com');
+    $response = $requestFrom->getBody()->getContents();
     return dd($response);
 });
