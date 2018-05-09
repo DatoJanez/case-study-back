@@ -18,7 +18,12 @@ to create new job
 
 php artisan make:command FetchRates
 
-implemented method to fetch data
+implemented handle method to fetch data
+
+$client = new Client();
+$request = $client->get('example.com');
+$response = $request->getBody()->getContents();
+Cache::store('file')->put('rates', $response, 10);
 
 added it to kernel 
 
@@ -27,5 +32,23 @@ set it to run every minute
 and execute 
 
 php artisan DeleteInActiveUsers:deleteusers
+
+
+
+API Route
+
+
+
+Route::get('/convert', function (Request $request) {
+    Cache::store('file')->put('rates', $response, 10);
+    $value = Cache::store('file')->get('rates');
+    if($value) {
+        return dd($value)
+    }
+    $client = new Client();
+    $request = $client->get('example.com');
+    $response = $request->getBody()->getContents();
+    return dd($response);
+});
 
 

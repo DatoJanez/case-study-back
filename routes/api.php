@@ -19,10 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/convert', function (Request $request) {
-    Cache::store('file')->put('rates', $response, 10);
     $value = Cache::store('file')->get('rates');
     if($value) {
-        return dd($value)
+        return dd($value);
     }
     $client = new Client();
     $request = $client->get('example.com');
